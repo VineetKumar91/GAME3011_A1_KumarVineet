@@ -12,7 +12,7 @@ public class GridManager : MonoBehaviour
     // prefab of the mining tile
     [SerializeField] private GameObject MiningTile;
 
-    public List<TileBehaviour> tileList;
+    public TileBehaviour[,] tileMatrix;
 
     // Lazy singleton for now
     /// <summary>
@@ -23,6 +23,7 @@ public class GridManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        tileMatrix = new TileBehaviour[dimensions, dimensions];
         GenerateTileGrid();
         _instance = this;
     }
@@ -51,7 +52,38 @@ public class GridManager : MonoBehaviour
                 TileBehaviour tile = Instantiate(MiningTile, transform).GetComponent<TileBehaviour>();
                 tile.coordinates = new Vector2Int(i, j);
                 tile.tileNumber = tileCounter++;
-                tileList.Add(tile);
+                tileMatrix[i, j] = tile;
+            }
+        }
+    }
+
+
+    /// <summary>
+    /// Scan the surrounding tiles
+    /// </summary>
+    /// <param name="clickedTile"></param>
+    public void ScanTiles(TileBehaviour clickedTile)
+    {
+        // get row and column
+        int row = clickedTile.coordinates.x;
+        int column = clickedTile.coordinates.y;
+
+        // get the origin point of scanning row and column
+        int originRow = row - 1;
+        int originColumn = column - 1;
+
+        for (int i = originRow; i < originRow + 3; i++)
+        {
+            for (int j = originColumn; j < originColumn + 3; j++)
+            {
+                if (i >= 0 && i < dimensions && j >= 0 && j < dimensions)
+                {
+                    tileMatrix[i, j].GetComponent<Image>().color = Color.green;
+                }
+                else
+                {
+                    Debug.Log("Off coordinates found = " + i + "," + j);
+                }
             }
         }
     }
