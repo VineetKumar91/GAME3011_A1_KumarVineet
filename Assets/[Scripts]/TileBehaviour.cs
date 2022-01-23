@@ -45,7 +45,7 @@ public class TileBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     /// <param name="eventData"></param>
     public void OnPointerClick(PointerEventData eventData)
     {
-      // Debug.Log("Tile number " + tileNumber + " at coordinates " + coordinates.x + "," + coordinates.y + " selected.");
-       GridManager.GetInstance().ScanTiles(this);
+        //Debug.Log("Tile number " + tileNumber + " at coordinates " + coordinates.x + "," + coordinates.y + " selected.");
+        GridManager.GetInstance().ScanTiles(this);
     }
 }
