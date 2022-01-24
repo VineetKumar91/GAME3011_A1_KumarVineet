@@ -7,6 +7,7 @@ public class TileBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 {
     public Vector2Int coordinates;
     public int tileNumber = 0;
+    public TileStrength tileStrength = TileStrength.MINIMAL;
 
     // Start is called before the first frame update
     void Start()
@@ -47,5 +48,59 @@ public class TileBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     {
         //Debug.Log("Tile number " + tileNumber + " at coordinates " + coordinates.x + "," + coordinates.y + " selected.");
         GridManager.GetInstance().ScanTiles(this);
+        Debug.Log("Tile strength of clicked tile = " + tileStrength);
+    }
+
+    /// <summary>
+    /// Sets tile strength directly, generally useful for initializing
+    /// </summary>
+    /// <param name="strength"></param>
+    public void SetTileStrength(TileStrength strength)
+    {
+        tileStrength = strength;
+    }
+
+    /// <summary>
+    /// Get/Returns tile strength
+    /// </summary>
+    /// <returns></returns>
+    public TileStrength GetTileStrength()
+    {
+        return tileStrength;
+    }
+
+    /// <summary>
+    /// Extracts, means directly reduces the strength to minimal
+    /// </summary>
+    public void Extract()
+    {
+        tileStrength = TileStrength.MINIMAL;
+    }
+
+    /// <summary>
+    /// Degrade the tile by 1 level below
+    /// Full    becomes half
+    /// Half    becomes quarter
+    /// Quarter becomes minimal
+    /// Minimal stays minimal
+    /// </summary>
+    public void Degrade()
+    {
+        if (tileStrength == TileStrength.FULL)
+        {
+            tileStrength = TileStrength.HALF;
+        }
+        else if (tileStrength == TileStrength.HALF)
+        {
+            tileStrength = TileStrength.QUARTER;
+        }
+        else if (tileStrength == TileStrength.QUARTER)
+        {
+            tileStrength = TileStrength.MINIMAL;
+        }
+        else if (tileStrength == TileStrength.MINIMAL)
+        {
+            return;
+        }
     }
 }

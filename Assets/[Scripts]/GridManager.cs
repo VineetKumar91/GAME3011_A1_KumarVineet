@@ -3,9 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
+
+public enum TileStrength
+{
+    NONE,
+    MINIMAL,
+    QUARTER,
+    HALF,
+    FULL
+}
 
 public class GridManager : MonoBehaviour
 {
@@ -25,18 +33,9 @@ public class GridManager : MonoBehaviour
 
     // Lazy singleton for now
     /// <summary>
-    /// **NOTE** Please use professor Falsitta's Singleton template as that seems more better
+    /// Lazy singleton method to keep Monobehavior also
     /// </summary>
     private static GridManager _instance;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        maxResourceTileIndices = new List<int>();
-        tileMatrix = new TileBehaviour[dimensions, dimensions];
-        GenerateTileGrid();
-        _instance = this;
-    }
 
     /// <summary>
     /// Get the instance of this grid
@@ -45,6 +44,15 @@ public class GridManager : MonoBehaviour
     public static GridManager GetInstance()
     {
         return _instance;
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        maxResourceTileIndices = new List<int>();
+        tileMatrix = new TileBehaviour[dimensions, dimensions];
+        GenerateTileGrid();
+        _instance = this;
     }
 
     /// <summary>
@@ -60,6 +68,7 @@ public class GridManager : MonoBehaviour
                 TileBehaviour tile = Instantiate(MiningTile, transform).GetComponent<TileBehaviour>();
                 tile.coordinates = new Vector2Int(i, j);
                 tile.tileNumber = tileCounter++;
+                tile.tileStrength = TileStrength.MINIMAL;
                 tileMatrix[i, j] = tile;
             }
         }
@@ -107,6 +116,7 @@ public class GridManager : MonoBehaviour
                     if (tile.tileNumber == maxResourceTileNumber[maxResourceTileIndices[i]])
                     {
                         tile.GetComponent<Image>().color = Color.yellow;
+                        tile.tileStrength = TileStrength.FULL;
                         PlaceSurroundingResources(tile);
                     }
                 }
@@ -135,18 +145,20 @@ public class GridManager : MonoBehaviour
                 // 0 row/column, or n - 1 row/column (border) .... I know 5 - 1 is 4, but this is for algorithmic purposes
                 if (i == originRow || i == originRow + 5 - 1 || j == originColumn || j == originColumn + 5 - 1)
                 {
-                    tileMatrix[i,j].GetComponent<Image>().color = Color.blue;
+                    tileMatrix[i,j].GetComponent<Image>().color = Color.magenta;
+                    tileMatrix[i, j].tileStrength = TileStrength.QUARTER;
                 }
                 else if (i != row || j != column)   // if its not the centre tile (origin point of max resource)
                 {
                     // these tiles are not the border, but just inside the border AND neither they are the centre
-                    tileMatrix[i, j].GetComponent<Image>().color = Color.cyan;
+                    tileMatrix[i, j].GetComponent<Image>().color = Color.red;
+                    tileMatrix[i, j].tileStrength = TileStrength.HALF;
                 }
-                else
-                {
-                    // this tile is the centre
-                    tileMatrix[i,j].GetComponent<Image>().color = Color.yellow;
-                }
+                //else
+                //{
+                //    // this tile is the centre
+                //    tileMatrix[i,j].GetComponent<Image>().color = Color.yellow;
+                //}
             }
         }
     }
@@ -172,7 +184,7 @@ public class GridManager : MonoBehaviour
             {
                 if (i >= 0 && i < dimensions && j >= 0 && j < dimensions)
                 {
-                    tileMatrix[i, j].GetComponent<Image>().color = Color.green;
+                    //tileMatrix[i, j].GetComponent<Image>().color = Color.green;
                 }
                 else
                 {
@@ -180,5 +192,13 @@ public class GridManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// Extract the clicked tile and degrade the 2 rings of tiles around it
+    /// </summary>
+    public void ExtractTile()
+    {
+        
     }
 }
