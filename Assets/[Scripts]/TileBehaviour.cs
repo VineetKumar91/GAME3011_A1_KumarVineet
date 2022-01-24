@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class TileBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
@@ -47,7 +48,7 @@ public class TileBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public void OnPointerClick(PointerEventData eventData)
     {
         //Debug.Log("Tile number " + tileNumber + " at coordinates " + coordinates.x + "," + coordinates.y + " selected.");
-        GridManager.GetInstance().ScanTiles(this);
+        GridManager.GetInstance().ExtractTile(this);
         Debug.Log("Tile strength of clicked tile = " + tileStrength);
     }
 
@@ -75,6 +76,7 @@ public class TileBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public void Extract()
     {
         tileStrength = TileStrength.MINIMAL;
+        GetComponent<Image>().sprite = GridManager.GetInstance().MinimalResourcesSprite;
     }
 
     /// <summary>
@@ -89,14 +91,17 @@ public class TileBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         if (tileStrength == TileStrength.FULL)
         {
             tileStrength = TileStrength.HALF;
+            GetComponent<Image>().sprite = GridManager.GetInstance().HalfResourcesSprite;
         }
         else if (tileStrength == TileStrength.HALF)
         {
             tileStrength = TileStrength.QUARTER;
+            GetComponent<Image>().sprite = GridManager.GetInstance().QuarterResourcesSprite;
         }
         else if (tileStrength == TileStrength.QUARTER)
         {
             tileStrength = TileStrength.MINIMAL;
+            GetComponent<Image>().sprite = GridManager.GetInstance().MinimalResourcesSprite;
         }
         else if (tileStrength == TileStrength.MINIMAL)
         {
