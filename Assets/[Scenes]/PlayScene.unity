@@ -4842,6 +4842,20 @@ MonoBehaviour:
   currentModeImage: {fileID: 1481280170}
   scanSymbol: {fileID: 21300000, guid: b11e83eba8a5bd143b84ce7448f98039, type: 3}
   extractSymbol: {fileID: 21300000, guid: fd6b726737b0f3c44a29ba998f034e56, type: 3}
+  TotalScore: {fileID: 2127891395}
+  totalScoreValue: 0
+  minResCollectedText: {fileID: 1112978469}
+  minResCollected: 0
+  quarterResCollectedText: {fileID: 1947333845}
+  quarterResCollected: 0
+  halfResCollectedText: {fileID: 1617923878}
+  halfResCollected: 0
+  fullResCollectedText: {fileID: 575021752}
+  fullResCollected: 0
+  scansRemainingText: {fileID: 1938424517}
+  scansRemaining: 6
+  extractsRemainingText: {fileID: 514511979}
+  extractsRemaining: 3
 --- !u!4 &1779074767
 Transform:
   m_ObjectHideFlags: 0

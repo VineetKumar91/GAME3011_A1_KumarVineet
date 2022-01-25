@@ -9,6 +9,7 @@ public class TileBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public Vector2Int coordinates;
     public int tileNumber = 0;
     public TileStrength tileStrength = TileStrength.MINIMAL;
+    public TileValue value = TileValue.MINIMAL;
     public bool isVisible;
 
     // Start is called before the first frame update
@@ -60,10 +61,18 @@ public class TileBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         if (GameManager.GetInstance().GetCurrentMode() == Mode.SCAN)
         {
             GridManager.GetInstance().ScanTiles(this);
+
+            // Update scans remaining
+            GameManager.GetInstance().scansRemaining--;
+            GameManager.GetInstance().scansRemainingText.text = GameManager.GetInstance().scansRemaining.ToString();
         }
         else if (GameManager.GetInstance().GetCurrentMode() == Mode.EXTRACT)
         {
             GridManager.GetInstance().ExtractTile(this);
+
+            // Update extracts remaining
+            GameManager.GetInstance().extractsRemaining--;
+            GameManager.GetInstance().extractsRemainingText.text = GameManager.GetInstance().extractsRemaining.ToString();
         }
     }
 
@@ -90,6 +99,32 @@ public class TileBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     /// </summary>
     public void Extract()
     {
+        // Update values
+        if (tileStrength == TileStrength.MINIMAL)
+        {
+            GameManager.GetInstance().minResCollected += 1;
+            GameManager.GetInstance().totalScoreValue += (int)value;
+            Debug.Log("Minimal Extraction");
+        }
+        else if (tileStrength == TileStrength.QUARTER)
+        {
+            GameManager.GetInstance().quarterResCollected += 1;
+            GameManager.GetInstance().totalScoreValue += (int)value;
+            Debug.Log("QUARTER Extraction");
+        }
+        else if (tileStrength == TileStrength.HALF)
+        {
+            GameManager.GetInstance().halfResCollected += 1;
+            GameManager.GetInstance().totalScoreValue += (int)value;
+            Debug.Log("HALF Extraction");
+        }
+        else if (tileStrength == TileStrength.FULL)
+        {
+            GameManager.GetInstance().fullResCollected += 1;
+            GameManager.GetInstance().totalScoreValue += (int)value;
+            Debug.Log("FULL Extraction");
+        }
+
         tileStrength = TileStrength.MINIMAL;
 
         if (!isVisible)
@@ -98,6 +133,9 @@ public class TileBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         }
 
         GetComponent<Image>().sprite = GridManager.GetInstance().MinimalResourcesSprite;
+
+        // Update score stats
+        GameManager.GetInstance().UpdateStats();
     }
 
     /// <summary>
@@ -114,6 +152,7 @@ public class TileBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         {
             // reduce the tile strength
             tileStrength = TileStrength.HALF;
+            value = TileValue.HALF;
 
             if (isVisible)
             {
@@ -124,6 +163,7 @@ public class TileBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         {
             // reduce the tile strength
             tileStrength = TileStrength.QUARTER;
+            value = TileValue.QUARTER;
 
             if (isVisible)
             {
@@ -134,6 +174,7 @@ public class TileBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         {
             // reduce the tile strength
             tileStrength = TileStrength.MINIMAL;
+            value = TileValue.MINIMAL;
 
             if (isVisible)
             {

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,6 +26,33 @@ public class GameManager : MonoBehaviour
 
     // current mode
     private Mode currentMode;
+
+    [Header("Status Tracker")]
+    public TextMeshProUGUI TotalScore;
+    [HideInInspector]
+    public int totalScoreValue = 0;
+
+    public TextMeshProUGUI minResCollectedText;
+    [HideInInspector]
+    public int minResCollected = 0;
+
+    public TextMeshProUGUI quarterResCollectedText;
+    [HideInInspector]
+    public int quarterResCollected = 0;
+
+    public TextMeshProUGUI halfResCollectedText;
+    [HideInInspector]
+    public int halfResCollected = 0;
+
+    public TextMeshProUGUI fullResCollectedText;
+    [HideInInspector]
+    public int fullResCollected = 0;
+
+    public TextMeshProUGUI scansRemainingText;
+    public int scansRemaining = 6;
+
+    public TextMeshProUGUI extractsRemainingText;
+    public int extractsRemaining = 3;
 
     /// <summary>
     /// Lazy Singleton
@@ -93,5 +121,18 @@ public class GameManager : MonoBehaviour
 
         // set the current mode image
         currentModeImage.sprite = extractSymbol;
+    }
+
+
+    /// <summary>
+    /// Updates overall stats
+    /// </summary>
+    public void UpdateStats()
+    {
+        TotalScore.text = totalScoreValue.ToString();
+        minResCollectedText.text = minResCollected.ToString();
+        quarterResCollectedText.text = quarterResCollected.ToString();
+        halfResCollectedText.text = halfResCollected.ToString();
+        fullResCollectedText.text = fullResCollected.ToString();
     }
 }

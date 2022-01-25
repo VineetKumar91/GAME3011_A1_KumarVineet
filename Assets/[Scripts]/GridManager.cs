@@ -15,6 +15,15 @@ public enum TileStrength
     FULL
 }
 
+public enum TileValue
+{
+    NONE = 0,
+    MINIMAL = 250,
+    QUARTER = 500,
+    HALF = 1000,
+    FULL = 2000
+}
+
 public class GridManager : MonoBehaviour
 {
     // dimensions of the grid layout will always be same row-wise and column-wise
@@ -76,6 +85,7 @@ public class GridManager : MonoBehaviour
                 tile.coordinates = new Vector2Int(i, j);
                 tile.tileNumber = tileCounter++;
                 tile.tileStrength = TileStrength.MINIMAL;
+                tile.value = TileValue.MINIMAL;
                 tile.GetComponent<Image>().sprite = UnknownResourceTiles;
                 tileMatrix[i, j] = tile;
             }
@@ -125,6 +135,7 @@ public class GridManager : MonoBehaviour
                     {
                         //tile.GetComponent<Image>().color = Color.yellow;
                         tile.tileStrength = TileStrength.FULL;
+                        tile.value = TileValue.FULL;
                         //tile.GetComponent<Image>().sprite = FullResourcesSprite;
                         PlaceSurroundingResources(tile);
                     }
@@ -156,6 +167,7 @@ public class GridManager : MonoBehaviour
                 {
                     //tileMatrix[i,j].GetComponent<Image>().color = Color.magenta;
                     tileMatrix[i, j].tileStrength = TileStrength.QUARTER;
+                    tileMatrix[i, j].value = TileValue.QUARTER;
                     //tileMatrix[i, j].GetComponent<Image>().sprite = QuarterResourcesSprite;
                 }
                 else if (i != row || j != column)   // if its not the centre tile (origin point of max resource)
@@ -163,6 +175,8 @@ public class GridManager : MonoBehaviour
                     // these tiles are not the border, but just inside the border AND neither they are the centre
                     //tileMatrix[i, j].GetComponent<Image>().color = Color.red;
                     tileMatrix[i, j].tileStrength = TileStrength.HALF;
+                    tileMatrix[i, j].value = TileValue.HALF;
+
                     //tileMatrix[i, j].GetComponent<Image>().sprite = HalfResourcesSprite;
                 }
                 //else
@@ -211,6 +225,9 @@ public class GridManager : MonoBehaviour
     /// </summary>
     public void ExtractTile(TileBehaviour clickedTile)
     {
+        // Extract the clicked tile
+        clickedTile.Extract();
+
         // get row and column
         int row = clickedTile.coordinates.x;
         int column = clickedTile.coordinates.y;
@@ -233,7 +250,5 @@ public class GridManager : MonoBehaviour
                 }
             }
         }
-
-        clickedTile.Extract();
     }
 }
