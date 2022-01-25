@@ -9,11 +9,12 @@ public class TileBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public Vector2Int coordinates;
     public int tileNumber = 0;
     public TileStrength tileStrength = TileStrength.MINIMAL;
+    public bool isVisible;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        isVisible = false;
     }
 
     // Update is called once per frame
@@ -48,8 +49,22 @@ public class TileBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public void OnPointerClick(PointerEventData eventData)
     {
         //Debug.Log("Tile number " + tileNumber + " at coordinates " + coordinates.x + "," + coordinates.y + " selected.");
-        GridManager.GetInstance().ExtractTile(this);
-        Debug.Log("Tile strength of clicked tile = " + tileStrength);
+        //GridManager.GetInstance().ExtractTile(this);
+        //GridManager.GetInstance().ScanTiles(this);
+        //Debug.Log("Tile strength of clicked tile = " + tileStrength);
+
+        Debug.Log("Current mode is " + GameManager.GetInstance().GetCurrentMode());
+
+        // specifically check for conditions as after 3 extractions the game will be over
+        // after 6 scans, scan mode is no longer permitted
+        if (GameManager.GetInstance().GetCurrentMode() == Mode.SCAN)
+        {
+            GridManager.GetInstance().ScanTiles(this);
+        }
+        else if (GameManager.GetInstance().GetCurrentMode() == Mode.EXTRACT)
+        {
+            GridManager.GetInstance().ExtractTile(this);
+        }
     }
 
     /// <summary>
@@ -76,6 +91,12 @@ public class TileBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public void Extract()
     {
         tileStrength = TileStrength.MINIMAL;
+
+        if (!isVisible)
+        {
+            isVisible = true;
+        }
+
         GetComponent<Image>().sprite = GridManager.GetInstance().MinimalResourcesSprite;
     }
 
@@ -88,24 +109,67 @@ public class TileBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     /// </summary>
     public void Degrade()
     {
+        // Full
         if (tileStrength == TileStrength.FULL)
         {
+            // reduce the tile strength
             tileStrength = TileStrength.HALF;
-            GetComponent<Image>().sprite = GridManager.GetInstance().HalfResourcesSprite;
+
+            if (isVisible)
+            {
+                GetComponent<Image>().sprite = GridManager.GetInstance().HalfResourcesSprite;
+            }
+        }
+        else if (tileStrength == TileStrength.HALF)         // Half
+        {
+            // reduce the tile strength
+            tileStrength = TileStrength.QUARTER;
+
+            if (isVisible)
+            {
+                GetComponent<Image>().sprite = GridManager.GetInstance().QuarterResourcesSprite;
+            }
+        }
+        else if (tileStrength == TileStrength.QUARTER)      // Quarter
+        {
+            // reduce the tile strength
+            tileStrength = TileStrength.MINIMAL;
+
+            if (isVisible)
+            {
+                GetComponent<Image>().sprite = GridManager.GetInstance().MinimalResourcesSprite;
+            }
+        }
+        else if (tileStrength == TileStrength.MINIMAL)      // Minimal
+        {
+            return;
+        }
+    }
+
+
+    /// <summary>
+    /// Scan reveals the tile along with one ring of tile around it
+    /// it flags the tile of the grid as Visible for the rest of the turns
+    /// </summary>
+    public void Scan()
+    {
+        isVisible = true;
+
+        if (tileStrength == TileStrength.FULL)
+        { 
+            GetComponent<Image>().sprite = GridManager.GetInstance().FullResourcesSprite;
         }
         else if (tileStrength == TileStrength.HALF)
         {
-            tileStrength = TileStrength.QUARTER;
-            GetComponent<Image>().sprite = GridManager.GetInstance().QuarterResourcesSprite;
+            GetComponent<Image>().sprite = GridManager.GetInstance().HalfResourcesSprite;
         }
         else if (tileStrength == TileStrength.QUARTER)
         {
-            tileStrength = TileStrength.MINIMAL;
-            GetComponent<Image>().sprite = GridManager.GetInstance().MinimalResourcesSprite;
+            GetComponent<Image>().sprite = GridManager.GetInstance().QuarterResourcesSprite;
         }
         else if (tileStrength == TileStrength.MINIMAL)
         {
-            return;
+            GetComponent<Image>().sprite = GridManager.GetInstance().MinimalResourcesSprite;
         }
     }
 }

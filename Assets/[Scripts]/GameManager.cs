@@ -24,12 +24,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Sprite extractSymbol;
 
     // current mode
-    public Mode currentMode;
+    private Mode currentMode;
 
     /// <summary>
     /// Lazy Singleton
     /// </summary>
-    public static GameManager _instance;
+    private static GameManager _instance;
 
     /// <summary>
     /// Lazy Singleton get instance method
@@ -53,12 +53,15 @@ public class GameManager : MonoBehaviour
         currentMode = Mode.SCAN;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
+    /// <summary>
+    /// Getter for the current mode
+    /// </summary>
+    /// <returns></returns>
+    public Mode GetCurrentMode()
+    {
+        return currentMode;
+    }
 
     /// <summary>
     /// Scan Mode on toggle function

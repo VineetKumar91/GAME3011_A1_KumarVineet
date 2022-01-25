@@ -31,6 +31,8 @@ public class GridManager : MonoBehaviour
     // List of the max resource tile
     List<int> maxResourceTileIndices;
 
+    [Header("Sprites for tiles")] 
+    public Sprite UnknownResourceTiles;
     public Sprite MinimalResourcesSprite;
     public Sprite QuarterResourcesSprite;
     public Sprite HalfResourcesSprite;
@@ -74,7 +76,7 @@ public class GridManager : MonoBehaviour
                 tile.coordinates = new Vector2Int(i, j);
                 tile.tileNumber = tileCounter++;
                 tile.tileStrength = TileStrength.MINIMAL;
-                tile.GetComponent<Image>().sprite = MinimalResourcesSprite;
+                tile.GetComponent<Image>().sprite = UnknownResourceTiles;
                 tileMatrix[i, j] = tile;
             }
         }
@@ -123,7 +125,7 @@ public class GridManager : MonoBehaviour
                     {
                         //tile.GetComponent<Image>().color = Color.yellow;
                         tile.tileStrength = TileStrength.FULL;
-                        tile.GetComponent<Image>().sprite = FullResourcesSprite;
+                        //tile.GetComponent<Image>().sprite = FullResourcesSprite;
                         PlaceSurroundingResources(tile);
                     }
                 }
@@ -154,14 +156,14 @@ public class GridManager : MonoBehaviour
                 {
                     //tileMatrix[i,j].GetComponent<Image>().color = Color.magenta;
                     tileMatrix[i, j].tileStrength = TileStrength.QUARTER;
-                    tileMatrix[i, j].GetComponent<Image>().sprite = QuarterResourcesSprite;
+                    //tileMatrix[i, j].GetComponent<Image>().sprite = QuarterResourcesSprite;
                 }
                 else if (i != row || j != column)   // if its not the centre tile (origin point of max resource)
                 {
                     // these tiles are not the border, but just inside the border AND neither they are the centre
                     //tileMatrix[i, j].GetComponent<Image>().color = Color.red;
                     tileMatrix[i, j].tileStrength = TileStrength.HALF;
-                    tileMatrix[i, j].GetComponent<Image>().sprite = HalfResourcesSprite;
+                    //tileMatrix[i, j].GetComponent<Image>().sprite = HalfResourcesSprite;
                 }
                 //else
                 //{
@@ -194,6 +196,7 @@ public class GridManager : MonoBehaviour
                 if (i >= 0 && i < dimensions && j >= 0 && j < dimensions)
                 {
                     //tileMatrix[i, j].GetComponent<Image>().color = Color.green;
+                    tileMatrix[i, j].Scan();
                 }
                 else
                 {
