@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class TileBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+public class TileBehaviour : MonoBehaviour, IPointerClickHandler
 {
     public Vector2Int coordinates;
     public int tileNumber = 0;
@@ -18,30 +18,6 @@ public class TileBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         isVisible = false;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    /// <summary>
-    /// When cursor hovers on a tile, highlight it to convey the information to the player
-    /// </summary>
-    /// <param name="eventData"></param>
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        //Debug.Log(tileNumber);
-    }
-    
-    /// <summary>
-    /// When cursor is not hovering on the tile, return back to normal color
-    /// </summary>
-    /// <param name="eventData"></param>
-    public void OnPointerExit(PointerEventData eventData)
-    {
-
-    }
-
     /// <summary>
     /// When player clicks on a tile, highlight the surrounding tiles
     /// Highlighting a total of 9 tiles
@@ -49,13 +25,6 @@ public class TileBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     /// <param name="eventData"></param>
     public void OnPointerClick(PointerEventData eventData)
     {
-        //Debug.Log("Tile number " + tileNumber + " at coordinates " + coordinates.x + "," + coordinates.y + " selected.");
-        //GridManager.GetInstance().ExtractTile(this);
-        //GridManager.GetInstance().ScanTiles(this);
-        //Debug.Log("Tile strength of clicked tile = " + tileStrength);
-
-        Debug.Log("Current mode is " + GameManager.GetInstance().GetCurrentMode());
-
         // specifically check for conditions as after 3 extractions the game will be over
         // after 6 scans, scan mode is no longer permitted
         if (GameManager.GetInstance().GetCurrentMode() == Mode.SCAN)
@@ -126,25 +95,21 @@ public class TileBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         {
             GameManager.GetInstance().minResCollected += 1;
             GameManager.GetInstance().totalScoreValue += (int)value;
-            Debug.Log("Minimal Extraction");
         }
         else if (tileStrength == TileStrength.QUARTER)
         {
             GameManager.GetInstance().quarterResCollected += 1;
             GameManager.GetInstance().totalScoreValue += (int)value;
-            Debug.Log("QUARTER Extraction");
         }
         else if (tileStrength == TileStrength.HALF)
         {
             GameManager.GetInstance().halfResCollected += 1;
             GameManager.GetInstance().totalScoreValue += (int)value;
-            Debug.Log("HALF Extraction");
         }
         else if (tileStrength == TileStrength.FULL)
         {
             GameManager.GetInstance().fullResCollected += 1;
             GameManager.GetInstance().totalScoreValue += (int)value;
-            Debug.Log("FULL Extraction");
         }
 
         tileStrength = TileStrength.MINIMAL;
