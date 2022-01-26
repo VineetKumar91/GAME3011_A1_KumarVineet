@@ -113,6 +113,7 @@ public class TileBehaviour : MonoBehaviour, IPointerClickHandler
         }
 
         tileStrength = TileStrength.MINIMAL;
+        value = TileValue.MINIMAL;
 
         if (!isVisible)
         {

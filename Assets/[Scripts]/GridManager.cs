@@ -255,6 +255,7 @@ public class GridManager : MonoBehaviour
             {
                 tileMatrix[i, j].tileStrength = TileStrength.MINIMAL;
                 tileMatrix[i, j].value = TileValue.MINIMAL;
+                tileMatrix[i, j].isVisible = false;
                 tileMatrix[i, j].GetComponent<Image>().sprite = UnknownResourceTiles;
             }
         }
