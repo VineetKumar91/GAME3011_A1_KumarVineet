@@ -71,7 +71,7 @@ public class TileBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             }
             else
             {
-                Debug.Log("Out of scans, don't do anything except for warn user");
+                GameManager.GetInstance().ActivateOutOfScans(true);
             }
 
             
@@ -85,10 +85,15 @@ public class TileBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                 // Update extracts remaining
                 GameManager.GetInstance().extractsRemaining--;
                 GameManager.GetInstance().extractsRemainingText.text = GameManager.GetInstance().extractsRemaining.ToString();
+
+                if (GameManager.GetInstance().extractsRemaining == 0)
+                {
+                    GameManager.GetInstance().ActivateGameOverPanel();
+                }
             }
             else
             {
-                Debug.Log("Out of extracts, game over");
+                GameManager.GetInstance().ActivateGameOverPanel();
             }
         }
     }

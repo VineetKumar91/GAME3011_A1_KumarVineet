@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
     // current mode
     private Mode currentMode;
 
+    // All the status of the game
     [Header("Status Tracker")]
     public TextMeshProUGUI TotalScore;
     [HideInInspector]
@@ -54,6 +55,14 @@ public class GameManager : MonoBehaviour
 
     public TextMeshProUGUI extractsRemainingText;
     public int extractsRemaining = 3;
+
+    [Header("Out Of Scans Prompt")] 
+    public TextMeshProUGUI OutOfScansText;
+
+    [Header("Game Over")] 
+    public GameObject GameOverPanel;
+
+    public TextMeshProUGUI finalScoreText;
 
     /// <summary>
     /// Lazy Singleton
@@ -82,29 +91,11 @@ public class GameManager : MonoBehaviour
         currentMode = Mode.SCAN;
     }
 
+    // Update function
     private void Update()
     {
-        if (Input.GetAxis("Mouse ScrollWheel") > 0f || Input.GetAxis("Mouse ScrollWheel") < 0f)
-        {
-            if (currentMode == Mode.SCAN)
-            {
-                ExtractModeOn();
-
-                if (CursorBehaviour.GetInstance().isOnGrid)
-                {
-                    CursorBehaviour.GetInstance().ChangeCursor();
-                }
-            }
-            else if (currentMode == Mode.EXTRACT)
-            {
-                ScanModeOn();
-
-                if (CursorBehaviour.GetInstance().isOnGrid)
-                {
-                    CursorBehaviour.GetInstance().ChangeCursor();
-                }
-            }
-        }
+        // Get input from mouse scroll wheel and do the needful
+        GetMouseScrollWheelInput();
     }
 
 
@@ -162,8 +153,108 @@ public class GameManager : MonoBehaviour
         fullResCollectedText.text = fullResCollected.ToString();
     }
 
+    /// <summary>
+    /// Get Mouse scroll Input
+    /// </summary>
     public void GetMouseScrollWheelInput()
     {
+        // If Mouse scroll wheel goes up or down
+        if (Input.GetAxis("Mouse ScrollWheel") > 0f || Input.GetAxis("Mouse ScrollWheel") < 0f)
+        {
+            if (currentMode == Mode.SCAN)
+            {
+                ExtractModeOn();
 
+                if (CursorBehaviour.GetInstance().isOnGrid)
+                {
+                    CursorBehaviour.GetInstance().ChangeCursor();
+                }
+            }
+            else if (currentMode == Mode.EXTRACT)
+            {
+                ScanModeOn();
+
+                if (CursorBehaviour.GetInstance().isOnGrid)
+                {
+                    CursorBehaviour.GetInstance().ChangeCursor();
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Activate that TMP of out of scans text
+    /// </summary>
+    public void ActivateOutOfScans(bool status)
+    {
+        OutOfScansText.gameObject.SetActive(status);
+    }
+
+    /// <summary>
+    /// Activate game over panel
+    /// </summary>
+    public void ActivateGameOverPanel()
+    {
+        GameOverPanel.SetActive(true);
+        finalScoreText.text = totalScoreValue.ToString();
+    }
+
+
+    /// <summary>
+    /// On Button Press Retry
+    /// </summary>
+    public void ButtonPress_Retry()
+    {
+        GridManager.GetInstance().RestartGrid();
+        RestartGame();
+    }
+
+    /// <summary>
+    /// On Button Press Retry
+    /// </summary>
+    public void ButtonPress_Quit()
+    {
+        Application.Quit();
+
+        #if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+        #endif
+
+
+    }
+
+
+
+    /// <summary>
+    /// Restart game
+    /// </summary>
+    public void RestartGame()
+    {
+        // Set scan mode on and extract mode off by default
+        scanToggle.isOn = true;
+        extractToggle.isOn = false;
+
+        // set current mode to 
+        currentMode = Mode.SCAN;
+
+        // values
+        scansRemaining = 6;
+        scansRemainingText.text = scansRemaining.ToString();
+        extractsRemaining = 3;
+        extractsRemainingText.text = extractsRemaining.ToString();
+        totalScoreValue = 0;
+        minResCollected = 0;
+        quarterResCollected = 0;
+        halfResCollected = 0;
+        fullResCollected = 0;
+
+        // Update TMP stats
+        UpdateStats();
+
+        // Deactivate panel and out of scans text
+        ActivateOutOfScans(false);
+        GameOverPanel.SetActive(false);
+
+        finalScoreText.text = "0";
     }
 }

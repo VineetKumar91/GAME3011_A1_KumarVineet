@@ -104,6 +104,9 @@ public class GridManager : MonoBehaviour
     /// </summary>
     private void GenerateResourceIndexList()
     {
+        // Clear that list of max resource tiles indices
+        maxResourceTileIndices.Clear();
+
         while (maxResourceTileIndices.Count < 10)
         {
             int generatedIndex = Random.Range(0, maxResourceTileNumber.Length);
@@ -250,5 +253,28 @@ public class GridManager : MonoBehaviour
                 }
             }
         }
+    }
+
+
+    /// <summary>
+    /// Restart Grid
+    /// </summary>
+    public void RestartGrid()
+    {
+        for (int i = 0; i < dimensions; i++)
+        {
+            for (int j = 0; j < dimensions; j++)
+            {
+                tileMatrix[i, j].tileStrength = TileStrength.MINIMAL;
+                tileMatrix[i, j].value = TileValue.MINIMAL;
+                tileMatrix[i, j].GetComponent<Image>().sprite = UnknownResourceTiles;
+            }
+        }
+
+        // Generate the 10 index out of the 20 provided in the array Randomly
+        GenerateResourceIndexList();
+
+        // Place resources around the generated max tile indices
+        PlaceResources();
     }
 }
