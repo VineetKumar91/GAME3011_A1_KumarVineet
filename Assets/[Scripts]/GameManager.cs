@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -81,6 +82,31 @@ public class GameManager : MonoBehaviour
         currentMode = Mode.SCAN;
     }
 
+    private void Update()
+    {
+        if (Input.GetAxis("Mouse ScrollWheel") > 0f || Input.GetAxis("Mouse ScrollWheel") < 0f)
+        {
+            if (currentMode == Mode.SCAN)
+            {
+                ExtractModeOn();
+
+                if (CursorBehaviour.GetInstance().isOnGrid)
+                {
+                    CursorBehaviour.GetInstance().ChangeCursor();
+                }
+            }
+            else if (currentMode == Mode.EXTRACT)
+            {
+                ScanModeOn();
+
+                if (CursorBehaviour.GetInstance().isOnGrid)
+                {
+                    CursorBehaviour.GetInstance().ChangeCursor();
+                }
+            }
+        }
+    }
+
 
     /// <summary>
     /// Getter for the current mode
@@ -134,5 +160,10 @@ public class GameManager : MonoBehaviour
         quarterResCollectedText.text = quarterResCollected.ToString();
         halfResCollectedText.text = halfResCollected.ToString();
         fullResCollectedText.text = fullResCollected.ToString();
+    }
+
+    public void GetMouseScrollWheelInput()
+    {
+
     }
 }

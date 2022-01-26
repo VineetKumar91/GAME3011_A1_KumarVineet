@@ -60,19 +60,36 @@ public class TileBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         // after 6 scans, scan mode is no longer permitted
         if (GameManager.GetInstance().GetCurrentMode() == Mode.SCAN)
         {
-            GridManager.GetInstance().ScanTiles(this);
 
-            // Update scans remaining
-            GameManager.GetInstance().scansRemaining--;
-            GameManager.GetInstance().scansRemainingText.text = GameManager.GetInstance().scansRemaining.ToString();
+            if (GameManager.GetInstance().scansRemaining > 0)
+            {
+                GridManager.GetInstance().ScanTiles(this);
+
+                // Update scans remaining
+                GameManager.GetInstance().scansRemaining--;
+                GameManager.GetInstance().scansRemainingText.text = GameManager.GetInstance().scansRemaining.ToString();
+            }
+            else
+            {
+                Debug.Log("Out of scans, don't do anything except for warn user");
+            }
+
+            
         }
         else if (GameManager.GetInstance().GetCurrentMode() == Mode.EXTRACT)
         {
-            GridManager.GetInstance().ExtractTile(this);
+            if (GameManager.GetInstance().extractsRemaining > 0)
+            {
+                GridManager.GetInstance().ExtractTile(this);
 
-            // Update extracts remaining
-            GameManager.GetInstance().extractsRemaining--;
-            GameManager.GetInstance().extractsRemainingText.text = GameManager.GetInstance().extractsRemaining.ToString();
+                // Update extracts remaining
+                GameManager.GetInstance().extractsRemaining--;
+                GameManager.GetInstance().extractsRemainingText.text = GameManager.GetInstance().extractsRemaining.ToString();
+            }
+            else
+            {
+                Debug.Log("Out of extracts, game over");
+            }
         }
     }
 
