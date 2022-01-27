@@ -76,17 +76,23 @@ public class GameManager : MonoBehaviour
         return _instance;
     }
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         _instance = this;
 
         // Set scan mode on and extract mode off by default
-        scanToggle.isOn = true;
-        extractToggle.isOn = false;
+        scanToggle.isOn = false;
+        extractToggle.isOn = true;
+
+        // change the toggle color
+        extractToggle.GetComponentInChildren<Image>().color = Color.cyan;
+        scanToggle.GetComponentInChildren<Image>().color = Color.white;
 
         // set current mode to 
-        currentMode = Mode.SCAN;
+        currentMode = Mode.EXTRACT;
+
+        // set the current mode image
+        currentModeImage.sprite = extractSymbol;
     }
 
     // Update function
@@ -229,11 +235,18 @@ public class GameManager : MonoBehaviour
     public void RestartGame()
     {
         // Set scan mode on and extract mode off by default
-        scanToggle.isOn = true;
-        extractToggle.isOn = false;
+        scanToggle.isOn = false;
+        extractToggle.isOn = true;
+
+        // change the toggle color
+        extractToggle.GetComponentInChildren<Image>().color = Color.cyan;
+        scanToggle.GetComponentInChildren<Image>().color = Color.white;
 
         // set current mode to 
-        currentMode = Mode.SCAN;
+        currentMode = Mode.EXTRACT;
+
+        // set the current mode image
+        currentModeImage.sprite = extractSymbol;
 
         // values
         scansRemaining = 6;
