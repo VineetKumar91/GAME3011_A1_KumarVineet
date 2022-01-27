@@ -14,6 +14,10 @@ public enum Mode
 public class GameManager : MonoBehaviour
 {
 
+    // Start game event
+    [SerializeField] private GameObject StartPanel;
+    [SerializeField] private GameObject GamePanel;
+
     // Scan and Toggle mode components
     [Header("Toggle Mode")]
     [SerializeField] private Toggle scanToggle;
@@ -225,6 +229,15 @@ public class GameManager : MonoBehaviour
         #endif
 
 
+    }
+
+    /// <summary>
+    /// Button press event for starting the game
+    /// </summary>
+    public void ButtonPress_StartGame()
+    {
+        StartPanel.SetActive(false);
+        GamePanel.SetActive(true);
     }
 
 
